@@ -1,0 +1,4 @@
+name,surname,birthDate,email,address,note
+Giancarlo,Baronti,1979-03-01,g.baronti@gmail.com,pescia,csv-import
+Matteo,Fantozzi,1980-10-24,m.fantozzi@gmail.com,pescia,csv-import
+Davide,Franceschi,1980-09-23,d.franceschi@gmail.com,pescia,csv-import
