@@ -5,10 +5,15 @@ docker network create user_demo_net
 
 
 MySql Docker container creation:  
-docker run --network user_demo_net --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=user-demo --env MYSQL_PASSWORD=dummypassword --env MYSQL_DATABASE=user-demo-database --name UserDemoMySql --publish 3306:3306 mysql:8-oracle  
+docker run --name UserDemoMySql --network user_demo_net -p 3309:3306 -e MYSQL_USER=user-demo -e MYSQL_PASSWORD=dummypassword -e MYSQL_ROOT_PASSWORD=dummypassword -e MYSQL_DATABASE=user-demo-database -d mysql:8-oracle  
 
 Maven Project container creation:
-docker run --network user_demo_net --name user-demo-rest -p8080:8080 user-demo:0.0.1-SNAPSHOT
+
+Create image  
+docker build --tag user-demo:latest .  
+
+Create container   
+docker run --network user_demo_net -p 9090:8080 -e MYSQL_HOST=UserDemoMySql -e MYSQL_PORT=3309 -d user-demo:latest
 
 
 Swagger enabled  

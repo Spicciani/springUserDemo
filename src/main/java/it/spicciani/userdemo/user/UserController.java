@@ -1,5 +1,6 @@
 package it.spicciani.userdemo.user;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import it.spicciani.userdemo.tools.CsvManager;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -38,14 +40,15 @@ public class UserController {
 	}
 
 	@GetMapping
-	Iterable<User> getUsers(@RequestParam(value = "name", required = false) String name,
+	Iterable<User> getUsers(
+			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "surname", required = false) String surname) {
 		if (name != null && surname != null) {
 			return userRepo.findByNameContainsAndSurnameContains(name, surname);
 		} else if (name != null) {
 			return userRepo.findByNameContains(name);
 		} else if (surname != null) {
-			return userRepo.findBySurname(surname);
+			return userRepo.findBySurnameContains(surname);
 		} else {
 			return userRepo.findAll();
 		}
@@ -63,7 +66,8 @@ public class UserController {
 
 	@PutMapping("/{id}")
 	ResponseEntity<User> putUser(@PathVariable long id, @RequestBody @Valid User user) {
-		return userRepo.existsById(id) ? new ResponseEntity<>(userRepo.save(user), HttpStatus.OK)
+		return userRepo.existsById(id) 
+				? new ResponseEntity<>(userRepo.save(user), HttpStatus.OK)
 				: new ResponseEntity<>(userRepo.save(user), HttpStatus.CREATED);
 	}
 
@@ -73,7 +77,7 @@ public class UserController {
 	}
 
 	
-	@PostMapping(path = "/csv")
+	@PostMapping("/csv")
     public ResponseEntity<String> postCsv(@RequestParam("file") MultipartFile csvFile) throws Exception {
 		if(csvManager.isCSVFile(csvFile)) {
 			List<User> csvUsers = csvManager.csvReader(csvFile.getInputStream());
@@ -83,6 +87,13 @@ public class UserController {
 		    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not a csv file");
 		}
 		
+    }
+	
+	@GetMapping("/csv")
+    public void getAllEmployeesInCsv(HttpServletResponse servletResponse) throws IOException {
+        servletResponse.setContentType(CsvManager.TYPE);
+        servletResponse.addHeader("Content-Disposition","attachment; filename=\"user.csv\"");
+        csvManager.csvWriter(servletResponse.getWriter(), userRepo.findAll());
     }
 
 }

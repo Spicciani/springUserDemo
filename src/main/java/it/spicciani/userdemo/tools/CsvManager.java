@@ -4,13 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Writer;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,8 +20,6 @@ import it.spicciani.userdemo.user.User;
 @Component
 public class CsvManager {
 	public static String TYPE = "text/csv";
-
-	static String[] HEADERs = { "id", "name", "surname", "birthDate", "birthDate", "address", "note" };
 
 	public boolean isCSVFile(MultipartFile file) {
 
@@ -48,4 +47,23 @@ public class CsvManager {
 			throw new RuntimeException("Parsing file error: " + e.getMessage());
 		}
 	}
+
+	public void csvWriter(Writer writer, Iterable<User> users) throws IOException {
+
+        try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
+            csvPrinter.printRecord("id", "name", "surname","birthDate","email", "address", "note");
+            for (User user : users) {
+                csvPrinter.printRecord(
+                		user.getId(), 
+                		user.getName(), 
+                		user.getSurname(),
+                		user.getBirthDate(),
+                		user.getEmail(), 
+                		user.getAddress(),
+                		user.getNote());
+            }
+        } catch (IOException e) {
+           throw e;
+        }
+    }
 }
