@@ -18,3 +18,7 @@ docker run --network user_demo_net -p 9090:8080 -e MYSQL_HOST=UserDemoMySql -e M
 
 Swagger enabled  
 http://localhost:8080/swagger-ui
+
+CSV example file in the main folder: importexample.csv  
+
+
