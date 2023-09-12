@@ -24,22 +24,25 @@ public class AutoRun implements CommandLineRunner {
 		dummy.setAddress("Via Simonetti n 5");
 		dummy.setBirthDate(LocalDate.of(1980, 9, 23));
 		dummy.setEmail("marco.spicciani@gmail.com");
+		dummy.setNote("example");
 		userRepo.save(dummy);
 		
 		dummy = new User();
 		dummy.setName("Mario");
 		dummy.setSurname("Rossi");
-		dummy.setAddress("Via Simonetti n 5");
-		dummy.setBirthDate(LocalDate.of(1986, 9, 23));
+		dummy.setAddress("Via Amedeo n 7");
+		dummy.setBirthDate(LocalDate.of(1986, 10, 11));
 		dummy.setEmail("mario.rossi@gmail.com");
+		dummy.setNote("example");
 		userRepo.save(dummy);
 		
 		dummy = new User();
 		dummy.setName("Luigi");
 		dummy.setSurname("Rossi");
-		dummy.setAddress("Via Simonetti n 5");
-		dummy.setBirthDate(LocalDate.of(1987, 9, 23));
+		dummy.setAddress("Via Amedeo n 7");
+		dummy.setBirthDate(LocalDate.of(1987, 3, 26));
 		dummy.setEmail("luigi.rossi@gmail.com");
+		dummy.setNote("example");
 		userRepo.save(dummy);
 	}
 
